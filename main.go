@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -14,7 +15,7 @@ func main() {
 
 	err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
+			log.Fatalf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
 			return filepath.SkipDir
 		}
 		if info.IsDir() && info.Name() == dirName {
@@ -25,7 +26,7 @@ func main() {
 		return nil
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 	}
 }
 
@@ -35,7 +36,7 @@ func getPath() string {
 	homeDir, err := os.UserHomeDir()
 
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 	}
 	fmt.Println("Provide a path to delete all node_modules directories:")
 	fmt.Scanln(&path)
