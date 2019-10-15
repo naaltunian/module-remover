@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -25,7 +26,7 @@ func main() {
 		return nil
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 	}
 }
 
@@ -35,7 +36,7 @@ func getPath() string {
 	homeDir, err := os.UserHomeDir()
 
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 	}
 	fmt.Println("Provide a path to delete all node_modules directories:")
 	fmt.Scanln(&path)
