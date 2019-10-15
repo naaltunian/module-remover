@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,8 +10,16 @@ import (
 func main() {
 	var dirName = "node_modules"
 	var err error
+	var path string
+	var moduleDirPath string
+	flag.StringVar(&moduleDirPath, "path", "none", "File path to be used")
+	flag.Parse()
 
-	path := getPath()
+	if moduleDirPath == "none" {
+		path = getPath()
+	} else {
+		path = moduleDirPath
+	}
 
 	err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -27,6 +36,14 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func checkPath(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
 }
 
 func getPath() string {
