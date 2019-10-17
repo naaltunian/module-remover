@@ -18,7 +18,8 @@ func main() {
 	flag.StringVar(&moduleDirPath, "path", "none", "File path to be used")
 	flag.Parse()
 
-	if moduleDirPath == "none" {
+	// checks if a path was given and if it's valid
+	if moduleDirPath == "none" || checkPath(moduleDirPath) == false {
 		path = getPath()
 	} else {
 		path = moduleDirPath
