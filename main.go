@@ -45,6 +45,20 @@ func main() {
 func getPath() string {
 
 	var path string
+	var validPath bool
+
+	for !validPath {
+		fmt.Println("Provide a path to delete all node_modules directories:")
+		fmt.Scanln(&path)
+		validPath = checkPath(path)
+	}
+
+	return path
+}
+
+// check if path exists
+func checkPath(path string) bool {
+
 	// get home directory
 	homeDir, err := os.UserHomeDir()
 
@@ -52,25 +66,9 @@ func getPath() string {
 		log.Fatalln(err)
 	}
 
-	fmt.Println("Provide a path to delete all node_modules directories:")
-	fmt.Scanln(&path)
-
-	validPath := checkPath(path)
-
-	// prevent deleting all node_modules on home path
-	if path == homeDir {
-		fmt.Println("Cannot use home directory for safety purposes. Enter a different path:")
-		path = getPath()
-	} else if !validPath {
-		fmt.Println("Provide a valid path:")
-		path = getPath()
-	}
-	return path
-}
-
-// check if path exists
-func checkPath(path string) bool {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	} else if path == homeDir {
 		return false
 	}
 	return true
