@@ -24,6 +24,7 @@ func main() {
 		path = moduleDirPath
 	}
 
+	// walks given file tree and deletes all node_modules directories
 	err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
@@ -47,6 +48,7 @@ func getPath() string {
 	var path string
 	var validPath bool
 
+	// validates path
 	for !validPath {
 		fmt.Println("Provide a path to delete all node_modules directories:")
 		fmt.Scanln(&path)
@@ -66,9 +68,12 @@ func checkPath(path string) bool {
 		log.Fatalln(err)
 	}
 
+	// Check if path exists or is home directory
 	if _, err := os.Stat(path); os.IsNotExist(err) {
+		fmt.Printf("Path %s does not exist:\n", path)
 		return false
 	} else if path == homeDir {
+		fmt.Println("Cannot use home directory for safety purposes:")
 		return false
 	}
 	return true
