@@ -10,10 +10,8 @@ import (
 
 func main() {
 
-	var dirName = "node_modules"
 	var path string
 	var moduleDirPath string
-	var err error
 
 	flag.StringVar(&moduleDirPath, "path", "none", "File path to be used")
 	flag.Parse()
@@ -25,22 +23,8 @@ func main() {
 		path = moduleDirPath
 	}
 
-	// walks given file tree and deletes all node_modules directories
-	err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
-			return filepath.SkipDir
-		}
-		if info.IsDir() && info.Name() == dirName {
-			fmt.Printf("Deleting: %+v \n", info.Name())
-			os.RemoveAll(path)
-		}
-		fmt.Printf("Visited file or dir: %q\n", path)
-		return nil
-	})
-	if err != nil {
-		log.Fatalln(err)
-	}
+	deleteModules(path)
+
 }
 
 // prompts the user for path if not given
@@ -78,4 +62,28 @@ func checkPath(path string) bool {
 		return false
 	}
 	return true
+}
+
+// delete node_modules
+func deleteModules(path string) {
+
+	var dirName = "node_modules"
+	var err error
+
+	// walks given file tree and deletes all node_modules directories
+	err = filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
+			return filepath.SkipDir
+		}
+		if info.IsDir() && info.Name() == dirName {
+			fmt.Printf("Deleting: %+v \n", info.Name())
+			os.RemoveAll(path)
+		}
+		fmt.Printf("Visited file or dir: %q\n", path)
+		return nil
+	})
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
